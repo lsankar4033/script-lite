@@ -17,13 +17,11 @@
                         (conj stack (first stack))
                         stack)})))
 
-;; TODO: should work through a list of bytes b/c some bytestrings will correspond to other data that needs to
-;; be put on the stack
-
-
 (defn exec
   "Run the specified ops. Returns true or false"
   [ops]
+  ; TODO: should work through a list of bytes b/c some bytestrings will correspond to other data that needs to
+  ; be put on the stack
   (let [{:keys [failed stack]} (reduce exec-op
                                        {:failed false, :stack []}
                                        ops)]
