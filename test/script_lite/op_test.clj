@@ -20,6 +20,12 @@
       ; NOTE: current behavior is noop when empty stack
       (is (exec-op :op-dup empty-stack-result) empty-stack-result)
 
-      (is (exec-op :op-dup nonempty-stack-result) {:failed false, :stack `(5 5)}))))
+      (is (exec-op :op-dup nonempty-stack-result) {:failed false, :stack `(5 5)})))
+
+  (testing "fails for nonexistent op"
+
+    (is (exec-op :op-fake {:failed false, :stack nil}) {:failed true, :stack nil})
+
+    (is (exec-op :op-fake {:failed false, :stack `(5)}) {:failed true, :stack `(5)})))
 
 ;; TODO: exec test. may want to restructure things accordingly?

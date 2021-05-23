@@ -12,4 +12,7 @@
       :op-dup {:failed failed,
                :stack (if-let [head (first stack)]
                         (conj stack (first stack))
-                        stack)})))
+                        stack)}
+
+      ; If no op match, fail with current stack
+      {:failed true, :stack stack})))
