@@ -1,6 +1,6 @@
-(ns script-lite.core-test
+(ns script-lite.op-test
   (:require [clojure.test :refer :all]
-            [script-lite.core :refer :all]))
+            [script-lite.op :refer :all]))
 
 (deftest exec-op-test
 

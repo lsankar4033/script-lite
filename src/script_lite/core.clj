@@ -1,28 +1,15 @@
-(ns script-lite.core)
+(ns script-lite.core
+  (:require [script-lite.op :as op]))
 
 ;; TODO: when I add crypto, sig+pubkey are stuck onto the stack *first*!
 
 
-(defn exec-op
-  "Run op with the given stack and return map of form {:failed, :stack}"
-  [op {:keys [failed stack]}]
-  (if failed
-    {:failed failed, :stack stack}
-
-    (case op
-      (:op-1, :op-true) {:failed failed, :stack (conj stack 1)}
-
-      :op-dup {:failed failed,
-               :stack (if-let [head (first stack)]
-                        (conj stack (first stack))
-                        stack)})))
-
 (defn exec
-  "Run the specified ops. Returns true or false"
+  "Run the specified ops. Returns true or false. Doesn't currently support non-op bytes in the script."
   [ops]
   ; TODO: should work through a list of bytes b/c some bytestrings will correspond to other data that needs to
   ; be put on the stack
-  (let [{:keys [failed stack]} (reduce exec-op
+  (let [{:keys [failed stack]} (reduce op/exec-op
                                        {:failed false, :stack []}
                                        ops)]
 
