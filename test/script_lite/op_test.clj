@@ -5,27 +5,28 @@
 (deftest exec-op-test
 
   (testing "failure short-circuit"
-    (let [failed-result {:failed true, :stack nil}]
-      (is (exec-op :op-1 failed-result) failed-result)))
+    (is (exec-op :op-1 nil)
+        {:failed true, :stack nil}))
 
   (testing "OP_1 and OP_TRUE"
-    (let [result {:failed false, :stack nil}]
-      (is (exec-op :op-1 result)  {:failed false, :stack `(1)})
+    (is (exec-op :op-1 nil)
+        {:failed false, :stack `(1)})
+    (is (exec-op :op-1 `(2))
+        {:failed false, :stack `(1, 2)})
 
-      (is (exec-op :op-true result)  {:failed false, :stack `(1)})))
+    (is (exec-op :op-true nil)
+        {:failed false, :stack `(1)})
+    (is (exec-op :op-true `(2))
+        {:failed false, :stack `(1, 2)}))
 
   (testing "OP_DUP"
-    (let [empty-stack-result {:failed false, :stack nil}
-          nonempty-stack-result {:failed false, :stack `(5)}]
-      ; NOTE: current behavior is noop when empty stack
-      (is (exec-op :op-dup empty-stack-result) empty-stack-result)
-
-      (is (exec-op :op-dup nonempty-stack-result) {:failed false, :stack `(5 5)})))
+    (is (exec-op :op-dup nil)
+        {:failed false, :stack nil})
+    (is (exec-op :op-dup `(5))
+        {:failed false, :stack `(5 5)}))
 
   (testing "fails for nonexistent op"
-
-    (is (exec-op :op-fake {:failed false, :stack nil}) {:failed true, :stack nil})
-
-    (is (exec-op :op-fake {:failed false, :stack `(5)}) {:failed true, :stack `(5)})))
-
-;; TODO: exec test. may want to restructure things accordingly?
+    (is (exec-op :op-fake nil)
+        {:failed true, :stack nil})
+    (is (exec-op :op-fake `(5))
+        {:failed true, :stack `(5)})))
